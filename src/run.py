@@ -1,22 +1,20 @@
-#from src import excel
-#from src import request_operations as ro
+import excel
+import request_operations as ro
 
-print("hola mundo!")
+# Create Virtual Environment        >python3 -m venv .venv
+# Activate Virtual Environment      >source .venv/bin/activate
+# Install a package into the Env    >python3 -m pip install openpyxl
+# De-activate Virtual Environment   >deactivate
 
-#ro.time_to_first_byte()
+msg = "hola mundo"
+print(msg)
 
-#kariyer_jobads = excel.read_kariyer_jobads()
-#f3 = kariyer_jobads[:3]
-#print(f3)
+kariyer_jobads = excel.read_kariyer_jobads()
+f3 = kariyer_jobads[:3]
+print(f3)
 
-#for i in range(1):
-#    jobad_id = f3['Ilan Kodu'][i]
-#    jobad_text = f3['AllText'][i]
-#    #print("Job ad ID: " + str(jobad_id) + ", Job ad text: " + jobad_text)
-#    ro.get_jobad_risk_score('kariyer', jobad_id, jobad_text)
 
-#for job_ad in first_3_kariyer_jobads:
-#    print(job_ad)
-#    print("\n")
 
-#excel.read_isinolsun_jobads()
+ro.time_to_first_byte()
+
+
