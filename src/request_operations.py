@@ -2,7 +2,7 @@ import time
 import requests
 
 def time_to_first_byte():
-    #from urllib import request
+    from urllib import request
 
     #host = "https://www.kariyer.net/"
     host = "https://tr.indeed.com/?r=us"
