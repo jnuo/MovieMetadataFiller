@@ -11,6 +11,14 @@ def read_isinolsun_jobads():
     df = pd.read_excel('docs/ilan_ornekleri.xlsx', "IO")
     print("reading isinolsun job ads...... DONE!")
 
+def read_filmbox_movies():
+    df = pd.read_excel('docs/filmbox_export_videos.xlsx')
+    return df
+
+def write_movies_to_excel(df):
+    with pd.ExcelWriter('docs/filmboxMoviesOutput.xlsx') as writer:  
+        df.to_excel(writer)
+
 
 #kariyer_jobads = excel.read_kariyer_jobads()
 #f3 = kariyer_jobads[:3]
