@@ -2,6 +2,21 @@ import excel
 import request_operations as ro
 import scrapeImdb as si
 import imdbpy as im
+import math 
+
+size = 23
+bufferSize = 10
+buckets = math.ceil(size / bufferSize) 
+print(f'size: {size} & buckets: {buckets}')
+
+for i in range(buckets):
+    print(f"bucket #{i} starting.")
+    start = i * bufferSize
+    for j in range(bufferSize):
+        currentItem = start + j
+        if currentItem >= size:
+            break
+        print(start+j)
 
 ####
 ## Venv
@@ -20,7 +35,7 @@ import imdbpy as im
 # git commit 'filename'
 # git push
 
-ro.time_to_first_byte()
+#ro.time_to_first_byte()
 
 #tenet_url = "https://www.imdb.com/title/tt6723592/"
 #m = si.getMovieScore(tenet_url)

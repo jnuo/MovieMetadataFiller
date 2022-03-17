@@ -13,12 +13,17 @@ def read_isinolsun_jobads():
 
 def read_filmbox_movies():
     df = pd.read_excel('docs/filmbox_export_videos.xlsx')
+    #df = pd.read_excel('docs/filmbox_export_videos_last3days.xlsx')
     return df
 
 def write_movies_to_excel(df):
     with pd.ExcelWriter('docs/filmboxMoviesOutput.xlsx') as writer:  
         df.to_excel(writer)
 
+def write_movies_to_excel_in_buffers(df, sheetName):
+    filePath = "docs/output/filmboxMoviesOutput_" + sheetName + ".xlsx"
+    with pd.ExcelWriter(filePath) as writer:  
+        df.to_excel(writer)
 
 #kariyer_jobads = excel.read_kariyer_jobads()
 #f3 = kariyer_jobads[:3]
