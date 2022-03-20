@@ -1,2 +1,6 @@
 # Project exclude paths
-/venv/
+.venv/
+*.db
+.DS_Store
+src/__pycache__
+docs/

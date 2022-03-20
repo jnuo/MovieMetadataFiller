@@ -3,20 +3,23 @@ import request_operations as ro
 import scrapeImdb as si
 import imdbpy as im
 import math 
+import db
 
-size = 23
-bufferSize = 10
-buckets = math.ceil(size / bufferSize) 
-print(f'size: {size} & buckets: {buckets}')
+x = db.getDBResult()
 
-for i in range(buckets):
-    print(f"bucket #{i} starting.")
-    start = i * bufferSize
-    for j in range(bufferSize):
-        currentItem = start + j
-        if currentItem >= size:
-            break
-        print(start+j)
+#size = 23
+#bufferSize = 10
+#buckets = math.ceil(size / bufferSize) 
+#print(f'size: {size} & buckets: {buckets}')
+
+#for i in range(buckets):
+#    print(f"bucket #{i} starting.")
+#    start = i * bufferSize
+#    for j in range(bufferSize):
+#        currentItem = start + j
+#        if currentItem >= size:
+#            break
+#        print(start+j)
 
 ####
 ## Venv
