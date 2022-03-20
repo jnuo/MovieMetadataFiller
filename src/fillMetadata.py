@@ -1,18 +1,18 @@
 from numpy import True_
 import excel
-#import request_operations as ro
-#import scrapeImdb as si
 import imdbpy as im
 import time
 import math
+import db
 
 start_time = time.time()
 
+db.createMovieDBifNotExists()
+
 movies = excel.read_filmbox_movies()
-#movies = movies[:3]
 
 size = len(movies)
-bucket_size = 500
+bucket_size = 3
 buckets = math.ceil(size / bucket_size)
 print(f'size: {size} & buckets: {buckets}')
 

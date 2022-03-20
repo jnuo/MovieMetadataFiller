@@ -1,5 +1,40 @@
 import sqlite3
 
+def createMovieDBifNotExists():
+    connection = sqlite3.connect("spi_movies.db")
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS Title (
+            spi_code TEXT
+            , title_type TEXT
+            , year INTEGER
+            , title_original TEXT
+            , language_original TEXT
+            , imdb_id TEXT
+            , director TEXT
+            , genre TEXT
+            , cast TEXT
+            , imdb_score REAL
+            , editor_score REAL
+            , duration_minutes INTEGER 
+            , URL_webapp TEXT
+            , URL_paywall TEXT
+            , notes TEXT
+            , isImdbSearched INTEGER
+            , gotImdbDetails INTEGER
+        	, imdbLastUpdateDate TEXT
+            , UNIQUE(spi_code)
+        )
+    """)
+    connection.close()
+
+def insertMovieIfNotExists(movies):
+    connection = sqlite3.connect("spi_movies.db")
+    cursor = connection.cursor()
+    cursor.executemany("INSERT OR IGNORE INTO Title VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", movies)
+    connection.commit()
+
 def getDBResult():
     connection = sqlite3.connect("gta.db")
     cursor = connection.cursor()
