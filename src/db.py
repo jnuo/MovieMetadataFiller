@@ -32,9 +32,68 @@ def createMovieDBifNotExists():
 def insertMovieIfNotExists(movies):
     connection = sqlite3.connect("spi_movies.db")
     cursor = connection.cursor()
-    cursor.executemany("INSERT OR IGNORE INTO Title VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", movies)
+    cursor.executemany("UPDATE Title VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", movies)
     connection.commit()
 
+def updateMovie(title):
+    connection = sqlite3.connect("spi_movies.db")
+    cursor = connection.cursor()
+    cursor.execute("""
+        UPDATE Title 
+        SET
+            title_type = :title_type
+            , year = :year
+            , title_original = :title_original
+            , language_original = :language_original
+            , imdb_id = :imdb_id
+            , director = :director
+            , genre = :genre
+            , cast = :cast
+            , imdb_score = :imdb_score
+            , editor_score = :editor_score
+            , duration_minutes = :duration_minutes
+            , URL_webapp = :URL_webapp
+            , URL_paywall = :URL_paywall
+            , notes = :notes
+            , isImdbSearched = :isImdbSearched
+            , gotImdbDetails = :gotImdbDetails
+        	, imdbLastUpdateDate = :imdbLastUpdateDate
+        WHERE
+            spi_code = :spi_code
+    """, {
+        "spi_code": title.spi_code
+        , "title_type": title.title_type
+        , "year": title.year
+        , "title_original": title.title_original
+        , "language_original": title.language_original
+        , "imdb_id": title.imdb_id
+        , "director": title.director
+        , "genre": title.genre
+        , "cast": title.cast
+        , "imdb_score": title.imdb_score
+        , "editor_score": title.editor_score
+        , "duration_minutes": title.duration_minutes
+        , "URL_webapp": title.url_webapp
+        , "URL_paywall": title.url_paywall
+        , "notes": title.notes
+        , "isImdbSearched": "1" if title.isImdbSearched == True else "0"
+        , "gotImdbDetails": "1" if title.gotImdbDetails == True else "0"
+        , "imdbLastUpdateDate": str(title.imdbLastUpdate)
+        }
+    )
+    connection.commit()
+
+def getImdbSearchList():
+    #print specific rows
+    print("get all movies to search imdb basic info")
+    connection = sqlite3.connect("spi_movies.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM Title WHERE isImdbSearched=0")
+    imdbSearchMovies = cursor.fetchall()
+    print(f"{str(len(imdbSearchMovies))} titles to search on imdb.")
+    return(imdbSearchMovies)
+
+### learning
 def getDBResult():
     connection = sqlite3.connect("gta.db")
     cursor = connection.cursor()

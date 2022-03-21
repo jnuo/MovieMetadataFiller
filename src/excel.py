@@ -12,7 +12,7 @@ def read_isinolsun_jobads():
     print("reading isinolsun job ads...... DONE!")
 
 def read_filmbox_movies():
-    df = pd.read_excel('docs/filmbox_export_videos.xlsx')
+    df = pd.read_excel('docs/export_video_version_132_1647797293.xlsx')
     #df = pd.read_excel('docs/filmbox_export_videos_last3days.xlsx')
     return df
 
