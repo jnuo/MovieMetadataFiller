@@ -1,6 +1,5 @@
-from datetime import datetime
 
-class Title:
+class ImdbDetails:
     spi_code: str
     title_type: str
     year: int

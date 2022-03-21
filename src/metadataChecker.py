@@ -6,7 +6,8 @@ import imdbpy as im
 import time
 import math
 import db
-import Title
+import Models.Title as Title
+from difflib import SequenceMatcher
 
 def insertSpiTitlesToDB():
     start_time = time.time()
@@ -92,20 +93,46 @@ def getBasicImdbInfo():
         if len(imdbSearchResults)==0:
             t.notes += "Title not found on IMDB."
         
-        # found = False
-        
-        # for imdbResult in imdbSearchResults:
-        #     imdbId = imdbResult.getID()
-        #     imdbMovieDetails = im.getMovie(imdbId)
-        #     imdbUrl = im.getMovieURL(imdbResult)
-        #     imdbTitle = imdbMovieDetails['title']
-        #     imdbYear = imdbMovieDetails['year']
-        #     imdbDirector = imdbMovieDetails['directors'][0]['name']
-        #     imdbDirectorStr = ', '.join(map(str, imdbMovieDetails['directors']))
+        #imdbSimilarNameResults = filter() imdbSearchResults.where()
+        imdbSimilarNameResults = [x for x in imdbSearchResults if SequenceMatcher(None, x["title"], t.title_original).ratio() >= 0.8]
 
-        t.isImdbSearched = True
-        db.updateMovie(t)
-    
+        for imdbResult in imdbSearchResults:
+            nameSimilarityRatio = SequenceMatcher(None, imdbResult["title"].lower(), t.title_original.lower()).ratio()
+            print("imdbResult[title]: " + imdbResult["title"] + "\t t.title_original: " + t.title_original + "\t ratio: " + str(nameSimilarityRatio))
+            if nameSimilarityRatio <= 0.8:
+                continue
+            
+            # 1. get movie details
+            imdbId = imdbResult.getID()
+            imdbMovieDetails = im.getMovie(imdbId)
+            imdbUrl = im.getMovieURL(imdbResult)
+
+            # 2. compare year, name, director
+            if t.year != imdbMovieDetails["year"]:
+                continue
+            directorSimilarityRatio = SequenceMatcher(None, imdbMovieDetails["directors"][0]["name"].lower(), t.director.split(",")[0].lower()).ratio()
+            if directorSimilarityRatio <= 0.8:
+                continue
+            
+            # 3. if same -> add new row as imdbTitle table & save
+            imdbDirector = imdbMovieDetails['directors'][0]['name']
+            imdbDirectorStr = ', '.join(map(str, imdbMovieDetails['directors']))
+            
+            t.language_original = ""
+            t.imdb_id = imdbId
+            t.director = ""
+            t.genre = ""
+            t.cast = ""
+            t.imdb_score = imdbMovieDetails["imdb_score"]
+            t.duration_minutes = ""
+            t.notes = ""
+            t.isImdbSearched = True
+            t.gotImdbDetails = True
+            t.imdb_url = imdbUrl
+            t.imdbLastUpdate = time.time()
+            db.updateMovie(t)
+            break
+        
     print("getBasicImdbInfo() total execution time --- %.2f minutes & %s results ---" % ((time.time() - start_time)/60, str(len(titles))))
 
 def getTitlesFromDBRows(dbTitles):

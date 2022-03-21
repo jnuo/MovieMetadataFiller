@@ -23,6 +23,7 @@ def createMovieDBifNotExists():
             , notes TEXT
             , isImdbSearched INTEGER
             , gotImdbDetails INTEGER
+            , URL_imdb TEXT
         	, imdbLastUpdateDate TEXT
             , UNIQUE(spi_code)
         )
@@ -32,7 +33,7 @@ def createMovieDBifNotExists():
 def insertMovieIfNotExists(movies):
     connection = sqlite3.connect("spi_movies.db")
     cursor = connection.cursor()
-    cursor.executemany("UPDATE Title VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", movies)
+    cursor.executemany("INSERT OR IGNORE INTO Title VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", movies)
     connection.commit()
 
 def updateMovie(title):
@@ -56,6 +57,7 @@ def updateMovie(title):
             , URL_paywall = :URL_paywall
             , notes = :notes
             , isImdbSearched = :isImdbSearched
+            , URL_imdb = :URL_imdb
             , gotImdbDetails = :gotImdbDetails
         	, imdbLastUpdateDate = :imdbLastUpdateDate
         WHERE
@@ -78,6 +80,7 @@ def updateMovie(title):
         , "notes": title.notes
         , "isImdbSearched": "1" if title.isImdbSearched == True else "0"
         , "gotImdbDetails": "1" if title.gotImdbDetails == True else "0"
+        , "URL_imdb": str(title.url_imdb)
         , "imdbLastUpdateDate": str(title.imdbLastUpdate)
         }
     )
