@@ -3,8 +3,8 @@ import scrapeImdb as si
 import imdbpy as im
 import metadataChecker as meta
 
-#meta.insertSpiTitlesToDB()
-meta.getBasicImdbInfo()
+meta.insertSpiTitlesToDB()
+meta.getImdbInfo()
 # 3. when all data is updated - create the new excel with difference data & REPORT CHANGE
 # 4. upload to CMS & be happy about it
 
