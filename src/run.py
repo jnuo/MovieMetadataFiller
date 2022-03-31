@@ -26,8 +26,15 @@ meta.getImdbInfo()
 # git commit 'filename'
 # git push
 
+##
+# to get original file and overwrite local changes
+##
+#git fetch
+#git checkout origin/master <filepath>
+
+
 ####
-## datetime -> sString & vice
+## datetime -> string & vice
 ####
 # my_date_string = datetime.datetime.utcnow().isoformat()
 # my_date = datetime.datetime.fromisoformat(my_date_string)
