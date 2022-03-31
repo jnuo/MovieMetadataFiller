@@ -5,8 +5,9 @@ import metadataChecker as meta
 import datetime
 
 #meta.insertSpiTitlesToDB_2()
-meta.getImdbInfo()
+#meta.getImdbInfo()
 # 3. when all data is updated - create the new excel with difference data & REPORT CHANGE
+meta.createCMSExcel()
 # 4. upload to CMS & be happy about it
 
 ####

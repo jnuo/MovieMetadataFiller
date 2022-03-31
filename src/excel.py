@@ -2,27 +2,25 @@ import time
 import pandas as pd
 import Models.Title as Title
 
-def read_kariyer_jobads():
-    print("reading kariyer job ads......")
-    df = pd.read_excel('docs/ilan_ornekleri.xlsx', "kariyer")
-    print("reading kariyer job ads...... DONE!\n\n")
-    return df
-
-def read_isinolsun_jobads():
-    print("reading isinolsun job ads......")
-    df = pd.read_excel('docs/ilan_ornekleri.xlsx', "IO")
-    print("reading isinolsun job ads...... DONE!")
+EXCEL_INPUT_FILE = "mypy/docs/filmbox_export_videos_last3days.xlsx"
+EXCEL_OUTPUT_FILE = "mypy/docs/output.xlsx"
 
 def read_filmbox_movies():
-    df = pd.read_excel('docs/export_video_version_132_1647797293.xlsx')
+    global EXCEL_INPUT_FILE
+    df = pd.read_excel(EXCEL_INPUT_FILE)
     #df = pd.read_excel('docs/filmbox_export_videos_last3days.xlsx')
     return df
+
+def write_movies_to_excel(df):
+    global EXCEL_OUTPUT_FILE
+    with pd.ExcelWriter(EXCEL_OUTPUT_FILE) as writer:
+        df.to_excel(writer)
 
 def read_filmbox_titles():
     start_time = time.time()
     print("excel.read_filmbox_titles() started.")
 
-    df = pd.read_excel('mypy/docs/export_video_version_132_1647797293.xlsx')    
+    df = pd.read_excel(EXCEL_FILE)
     titles = []
     
     for i in range(len(df)):
@@ -74,10 +72,6 @@ def read_filmbox_titles():
     print(f"excel.read_filmbox_titles() ended in %.2f seconds." % (time.time() - start_time))
     return titles
 
-def write_movies_to_excel(df):
-    with pd.ExcelWriter('docs/filmboxMoviesOutput.xlsx') as writer:  
-        df.to_excel(writer)
-
 def write_movies_to_excel_in_buffers(df, sheetName):
     filePath = "docs/output/filmboxMoviesOutput_" + sheetName + ".xlsx"
     with pd.ExcelWriter(filePath) as writer:  
@@ -98,3 +92,13 @@ def write_movies_to_excel_in_buffers(df, sheetName):
 #    print("\n")
 
 #excel.read_isinolsun_jobads()
+def read_kariyer_jobads():
+    print("reading kariyer job ads......")
+    df = pd.read_excel('docs/ilan_ornekleri.xlsx', "kariyer")
+    print("reading kariyer job ads...... DONE!\n\n")
+    return df
+
+def read_isinolsun_jobads():
+    print("reading isinolsun job ads......")
+    df = pd.read_excel('docs/ilan_ornekleri.xlsx', "IO")
+    print("reading isinolsun job ads...... DONE!")

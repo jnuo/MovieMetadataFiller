@@ -16,6 +16,43 @@ from difflib import SequenceMatcher
 #   4. Cast
 #   5. Duration
 
+def createCMSExcel():
+    start_time = time.time()
+    print("createCMSExcel() begins.")
+    excelMovies_df = excel.read_filmbox_movies()
+    notes = []
+    size = len(excelMovies_df)
+    
+    for i in range(size):
+        spi_code = ""
+        try:
+            spi_code = excelMovies_df['SPICode*'][i]
+            if(spi_code.strip()==""):
+                continue
+            else:
+                spi_code = spi_code.split("_")[0]
+                spi_code = spi_code.split("-")[0]
+        except:
+            note = "SPI Code is empty."
+            continue
+        
+        try:
+            db_titles = db.getTitleBySpiCode(spi_code)
+            title = getTitlesFromDBRows(db_titles)[0]
+            imdb_score = float(excelMovies_df["ImdbScore"][i])
+            if title.imdb_imdb_score != None and title.imdb_imdb_score != 0 and title.imdb_imdb_score != imdb_score:
+                excelMovies_df["ImdbScore"][i] = str(title.imdb_imdb_score)
+                notes.append("IMDBScore")
+            else:
+                notes.append("")
+        except:
+            notes.append("")
+            continue
+
+    excelMovies_df["mypy notes"] = notes
+    excel.write_movies_to_excel(excelMovies_df)
+    print("createCMSExcel() total execution time --- %.2f minutes ---" % (time.time() - start_time))
+
 # Target 2: getting local title-name & synopsis text from content websites for each title, compare with ours, update if necessary.
 #   1. Local title names
 #   2. Local synopsis text
@@ -273,8 +310,8 @@ def getTitlesFromDBRows(dbTitles):
         title.spi_producer = row[18]
         title.spi_cast = row[19]
         title.spi_tags = row[20]
-        title.spi_imdb_score = 0 if str(row[21])=='None' else float(row[21])
-        title.spi_editors_score = 0 if str(row[22])=='None' else float(row[22])
+        title.spi_imdb_score = None if str(row[21])=='None' else float(row[21])
+        title.spi_editors_score = None if str(row[22])=='None' else float(row[22])
         title.spi_duration_minutes = int(row[23])
         title.spi_slug = row[24]
         title.spi_url_webapp = row[25]

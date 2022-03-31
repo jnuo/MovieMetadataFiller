@@ -321,6 +321,19 @@ def getImdbSearchList():
     print(f"{str(len(imdbSearchMovies))} titles to search on imdb.")
     return(imdbSearchMovies)
 
+def getTitleBySpiCode(spi_code):
+    connection = sqlite3.connect("spi_movies.db")
+    cursor = connection.cursor()
+    cursor.execute("""
+        SELECT * FROM Title
+        WHERE
+            spi_code = :spi_code
+    """, {
+        "spi_code": spi_code
+    })
+    imdbSearchMovies = cursor.fetchall()
+    return imdbSearchMovies
+
 ### learning
 def getDBResult():
     connection = sqlite3.connect("gta.db")
