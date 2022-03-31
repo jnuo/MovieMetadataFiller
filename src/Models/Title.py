@@ -28,7 +28,6 @@ class Title:
     spi_slug: str
     spi_url_webapp: str
     spi_url_paywall: str
-
     is_imdb_searched: bool
     is_imdb_found: bool
     got_imdb_details: bool
@@ -45,7 +44,7 @@ class Title:
 
     def __init__(self, spi_code):
         self.spi_code = spi_code
-        self.title_type = "Movie" if spi_code.startswith("SPI") else "Series"
+        self.spi_title_type = "Movie" if spi_code.startswith("SPI") else "Series"
 
     def details(self):
         print("spi_code: " + self.spi_code

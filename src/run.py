@@ -2,8 +2,9 @@ import request_operations as ro
 import scrapeImdb as si
 import imdbpy as im
 import metadataChecker as meta
+import datetime
 
-meta.insertSpiTitlesToDB()
+#meta.insertSpiTitlesToDB_2()
 meta.getImdbInfo()
 # 3. when all data is updated - create the new excel with difference data & REPORT CHANGE
 # 4. upload to CMS & be happy about it
@@ -24,6 +25,14 @@ meta.getImdbInfo()
 # git add 'filename'
 # git commit 'filename'
 # git push
+
+####
+## datetime -> sString & vice
+####
+# my_date_string = datetime.datetime.utcnow().isoformat()
+# my_date = datetime.datetime.fromisoformat(my_date_string)
+# print(my_date)
+
 
 #ro.time_to_first_byte()
 
@@ -48,4 +57,3 @@ meta.getImdbInfo()
 #    casting = movieDetails['cast']
 #    direcStr = ' '.join(map(str, directors))
 #    print(f'Movie Detail info from getMovie: {title2} - {year2} - {direcStr} - {rating}')
-

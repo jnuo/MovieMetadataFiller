@@ -1,4 +1,6 @@
+import time
 import pandas as pd
+import Models.Title as Title
 
 def read_kariyer_jobads():
     print("reading kariyer job ads......")
@@ -15,6 +17,62 @@ def read_filmbox_movies():
     df = pd.read_excel('docs/export_video_version_132_1647797293.xlsx')
     #df = pd.read_excel('docs/filmbox_export_videos_last3days.xlsx')
     return df
+
+def read_filmbox_titles():
+    start_time = time.time()
+    print("excel.read_filmbox_titles() started.")
+
+    df = pd.read_excel('mypy/docs/export_video_version_132_1647797293.xlsx')    
+    titles = []
+    
+    for i in range(len(df)):
+        spi_code = ""
+        try:
+            spi_code = df['SPICode*'][i]
+            if(spi_code.strip()==""):
+                continue
+            else:
+                spi_code = spi_code.split("_")[0]
+                spi_code = spi_code.split("-")[0]
+        except:
+            print("SPI Code is empty for movie #" + str(i) + ".")
+            continue
+        
+        t = Title.Title(spi_code)
+        t.spi_identifiers = df['Identifier*'][i]
+        t.spi_year = 0 if df['ReleaseDate*'][i] == "" else int(df['ReleaseDate*'][i][0:4])
+        t.spi_title_original = df['EnglishTitle*'][i]
+        if t.spi_title_original == "":
+            print("Title of the movie w/ SPI Code: " + t.spi_code + " is empty.")
+            continue
+        t.spi_titles = df['Title*'][i]
+        t.spi_directors = df['Director'][i]
+        t.spi_writer = df['Writer'][i]
+        t.spi_producer = df['Producer'][i]
+        t.spi_tags = df['Tags*'][i]
+        t.spi_cast = df['Actor'][i]
+        t.spi_imdb_score = 0 if str(df['ImdbScore'][i])=='None' else float(df['ImdbScore'][i])
+        t.spi_editors_score = 0 if str(df['EditorScore'][i])=='None' else float(df['EditorScore'][i])
+        t.spi_url_paywall = df['Webapp URL'][i]
+        t.spi_url_webapp = df['Paywall URL'][i]
+        d = df['Duration*'][i].split(":")
+        duration_minutes = int(d[0])*60 + int(d[1])
+        t.spi_duration_minutes = duration_minutes
+        t.spi_slug = df['Content Slug'][i]
+        t.spi_description = df['Description*'][i]
+        t.spi_editorial_note = df['EditorialNote'][i]
+        t.spi_fb_regions = df['Region*'][i]
+        t.spi_age = df['Age*'][i]
+        t.spi_series_title = df['SeriesTitle'][i]
+        t.spi_series_original_title = df['SeriesEnglishTitle'][i]
+        t.spi_series_season_title = df['SeasonTitle'][i]
+        t.spi_position = df['Position'][i]
+        t.spi_publish_date = df['PublishDate*'][i]
+        t.spi_release_date = df['ReleaseDate*'][i]
+        titles.append(t)
+        
+    print(f"excel.read_filmbox_titles() ended in %.2f seconds." % (time.time() - start_time))
+    return titles
 
 def write_movies_to_excel(df):
     with pd.ExcelWriter('docs/filmboxMoviesOutput.xlsx') as writer:  

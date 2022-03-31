@@ -59,6 +59,166 @@ def insertOrIgnoreTitle(movies):
     , movies)
     connection.commit()
 
+def insertOrIgnoreTitle2(title):
+    connection = sqlite3.connect("spi_movies.db")
+    cursor = connection.cursor()
+    note = ""
+    imdb_cast = imdb_directors = imdb_genre = imdb_url = imdb_id = ""
+    imdb_imdb_score = 0
+    imdb_duration = 0
+    imdbLastUpdate = ""
+    cursor.execute("""
+        INSERT OR IGNORE INTO Title VALUES(
+            :spi_code
+            , :spi_identifiers
+            , :spi_title_type
+            , :spi_year
+            , :spi_titles
+            , :spi_title_original
+            , :spi_description
+            , :spi_editorial_note
+            , :spi_fb_regions
+            , :spi_age
+            , :spi_series_title
+            , :spi_series_original_title
+            , :spi_series_season_title
+            , :spi_position
+            , :spi_publish_date
+            , :spi_release_date
+            , :spi_directors
+            , :spi_writer
+            , :spi_producer
+            , :spi_cast
+            , :spi_tags
+            , :spi_imdb_score
+            , :spi_editors_score
+            , :spi_duration_minutes
+            , :spi_slug
+            , :spi_url_webapp
+            , :spi_url_paywall
+            , :notes
+            , :is_imdb_searched
+            , :is_imdb_found
+            , :got_imdb_details
+            , :imdb_id
+            , :imdb_url
+            , :imdb_imdb_score
+            , :imdb_genre
+            , :imdb_directors
+            , :imdb_cast
+            , :imdb_duration_minutes
+            , :imdb_last_update_date
+        )
+    """, {
+        "spi_code": title.spi_code
+        , "spi_identifiers": title.spi_identifiers
+        , "spi_title_type": title.spi_title_type
+        , "spi_year": title.spi_year
+        , "spi_titles": title.spi_titles
+        , "spi_title_original": title.spi_title_original
+        , "spi_description": title.spi_description
+        , "spi_editorial_note": title.spi_editorial_note
+        , "spi_fb_regions": title.spi_fb_regions
+        , "spi_age": title.spi_age
+        , "spi_series_title": title.spi_series_title
+        , "spi_series_original_title": title.spi_series_original_title
+        , "spi_series_season_title": title.spi_series_season_title
+        , "spi_position": title.spi_position
+        , "spi_publish_date": title.spi_publish_date
+        , "spi_release_date": title.spi_release_date
+        , "spi_directors": title.spi_directors
+        , "spi_writer": title.spi_writer
+        , "spi_producer": title.spi_producer
+        , "spi_cast": title.spi_cast
+        , "spi_tags": title.spi_tags
+        , "spi_imdb_score": str(title.spi_imdb_score)
+        , "spi_editors_score": str(title.spi_editors_score)
+        , "spi_duration_minutes": str(title.spi_duration_minutes)
+        , "spi_slug": title.spi_slug
+        , "spi_url_webapp": title.spi_url_webapp
+        , "spi_url_paywall": title.spi_url_paywall
+        , "notes": note
+        , "is_imdb_searched": "0"
+        , "is_imdb_found": "0"
+        , "got_imdb_details": "0"
+        , "imdb_id": imdb_id
+        , "imdb_url": imdb_url
+        , "imdb_imdb_score": imdb_imdb_score
+        , "imdb_genre": imdb_genre
+        , "imdb_directors": imdb_directors
+        , "imdb_cast": imdb_cast
+        , "imdb_duration_minutes": imdb_duration
+        , "imdb_last_update_date": imdbLastUpdate
+        }
+    )
+    connection.commit()
+
+def update_title_CMS_data(title):
+    connection = sqlite3.connect("spi_movies.db")
+    cursor = connection.cursor()
+    cursor.execute("""
+        UPDATE Title 
+        SET
+            spi_identifiers = :spi_identifiers
+            , spi_title_type = :spi_title_type
+            , spi_year = :spi_year
+            , spi_titles = :spi_titles
+            , spi_title_original = :spi_title_original
+            , spi_description = :spi_description
+            , spi_editorial_note = :spi_editorial_note
+            , spi_fb_regions = :spi_fb_regions
+            , spi_age = :spi_age
+            , spi_series_title = :spi_series_title
+            , spi_series_original_title = :spi_series_original_title
+            , spi_series_season_title = :spi_series_season_title
+            , spi_position = :spi_position
+            , spi_publish_date = :spi_publish_date
+            , spi_release_date = :spi_release_date
+            , spi_directors = :spi_directors
+            , spi_writer = :spi_writer
+            , spi_producer = :spi_producer
+            , spi_cast = :spi_cast
+            , spi_tags = :spi_tags
+            , spi_imdb_score = :spi_imdb_score
+            , spi_editors_score = :spi_editors_score
+            , spi_duration_minutes = :spi_duration_minutes
+            , spi_slug = :spi_slug
+            , spi_url_webapp = :spi_url_webapp
+            , spi_url_paywall = :spi_url_paywall
+        WHERE
+            spi_code = :spi_code
+    """, {
+        "spi_code": title.spi_code
+        , "spi_identifiers": title.spi_identifiers
+        , "spi_title_type": title.spi_title_type
+        , "spi_year": title.spi_year
+        , "spi_titles": title.spi_titles
+        , "spi_title_original": title.spi_title_original
+        , "spi_description": title.spi_description
+        , "spi_editorial_note": title.spi_editorial_note
+        , "spi_fb_regions": title.spi_fb_regions
+        , "spi_age": title.spi_age
+        , "spi_series_title": title.spi_series_title
+        , "spi_series_original_title": title.spi_series_original_title
+        , "spi_series_season_title": title.spi_series_season_title
+        , "spi_position": title.spi_position
+        , "spi_publish_date": title.spi_publish_date
+        , "spi_release_date": title.spi_release_date
+        , "spi_directors": title.spi_directors
+        , "spi_writer": title.spi_writer
+        , "spi_producer": title.spi_producer
+        , "spi_cast": title.spi_cast
+        , "spi_tags": title.spi_tags
+        , "spi_imdb_score": title.spi_imdb_score
+        , "spi_editors_score": title.spi_editors_score
+        , "spi_duration_minutes": title.spi_duration_minutes
+        , "spi_slug": title.spi_slug
+        , "spi_url_webapp": title.spi_url_webapp
+        , "spi_url_paywall": title.spi_url_paywall
+        }
+    )
+    connection.commit()
+
 def updateTitle(title):
     connection = sqlite3.connect("spi_movies.db")
     cursor = connection.cursor()
@@ -144,7 +304,7 @@ def updateTitle(title):
         , "imdb_directors": title.imdb_directors
         , "imdb_cast": title.imdb_cast
         , "imdb_duration_minutes": title.imdb_duration_minutes
-        , "imdb_last_update_date": title.imdb_last_update_date
+        , "imdb_last_update_date": title.imdb_last_update_date.isoformat()
         }
     )
     connection.commit()
@@ -154,7 +314,9 @@ def getImdbSearchList():
     print("get all movies to search imdb basic info")
     connection = sqlite3.connect("spi_movies.db")
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM Title WHERE is_imdb_searched=0")
+    cursor.execute("""
+        SELECT * FROM Title
+    """)
     imdbSearchMovies = cursor.fetchall()
     print(f"{str(len(imdbSearchMovies))} titles to search on imdb.")
     return(imdbSearchMovies)

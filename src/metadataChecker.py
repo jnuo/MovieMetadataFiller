@@ -1,5 +1,5 @@
-from contextlib import nullcontext
 from datetime import datetime
+from datetime import date
 from numpy import True_
 import excel
 import imdbpy as im
@@ -115,23 +115,51 @@ def insertSpiTitlesToDB():
                     , imdbLastUpdate)
             ]
             db.insertOrIgnoreTitle(movie)
+            db.update_title_CMS_data()
             print(f"Movie # {str(currentItem)} executed in %.2f seconds" % (time.time() - movieStartTime))
 
         print(f"bucket #{i} for {bucket_size} has ended in %.2f seconds." % (time.time() - bucket_start_time))
 
     print("Total execution time --- %.2f minutes ---" % ((time.time() - start_time)/60))
 
-def getImdbInfo():
+def insertSpiTitlesToDB_2():
+    print(f'insertSpiTitlesToDB_2 begins')
     start_time = time.time()
-    titles = getTitlesFromDBRows(db.getImdbSearchList())
-    print(f'getImdbInfo() starts for {str(len(titles))} titles.')
-    
+
+    db.createMovieDBifNotExists()
+    titles = excel.read_filmbox_titles()
+    print(f'insertSpiTitlesToDB_2 movies size: {len(titles)}.')
+
     for t in titles:
+        movieStartTime = time.time()
+        db.insertOrIgnoreTitle2(t)
+        db.update_title_CMS_data(t)
+        print(f"insertSpiTitlesToDB_2: Movie # {t.spi_code} executed in %.2f seconds" % (time.time() - movieStartTime))
+    
+    print(f"insertSpiTitlesToDB_2 Total Time: %.2f seconds" % (time.time() - start_time))
+
+def getImdbInfo():
+    print(f'getImdbInfo() starts.')
+    start_time = time.time()
+    imdbSearchList = db.getImdbSearchList()
+    titles = getTitlesFromDBRows(imdbSearchList)
+    titles_to_search_on_imdb = [] 
+    #= filter(lambda title: date(datetime.now()) - date(title.imdb_last_update_date) > 30)
+    for t in titles:
+        if t.imdb_last_update_date == None:
+            titles_to_search_on_imdb.append(t)
+        elif (date.today() - t.imdb_last_update_date.date()).days > 30:
+            titles_to_search_on_imdb.append(t)
+
+    print(f'getImdbInfo() starts for {str(len(titles_to_search_on_imdb))} titles.')
+    
+    for t in titles_to_search_on_imdb:
         movie_search_start_time = time.time()
         imdbSearchResults = []
         try:
             imdbSearchResults = im.searchMovie(t.spi_title_original)
         except:
+            t.notes += "im.searchMovie() exception. "
             print("searchMovie() throws exception for : " + t.spi_title_original)
         
         t.is_imdb_searched = True
@@ -155,15 +183,15 @@ def getImdbInfo():
             # 2. compare year, name, director
             try:
                 t.imdb_imdb_score = imdbMovieDetails['rating']
-            except:
-                continue
-            if t.spi_year != imdbMovieDetails["year"]:
-                continue
-            try:
+                if t.spi_year != imdbMovieDetails["year"]:
+                    #t.notes += "Compare with imdb result: YEAR problem. "
+                    continue
                 directorSimilarityRatio = SequenceMatcher(None, imdbMovieDetails["directors"][0]["name"].lower(), t.spi_directors.split(",")[0].lower()).ratio()
                 if directorSimilarityRatio <= 0.8:
+                    #t.notes += "Compare with imdb result: DIRECTOR problem. "
                     continue
             except:
+                #t.notes += "Compare with imdb result throws exception. "
                 continue
             
             # horray, found the movie!
@@ -213,11 +241,12 @@ def getImdbInfo():
             break
         
         if not(t.is_imdb_found):
-            t.note = "Movie NOT FOUND on IMDB."
+            t.notes = "Movie NOT FOUND on IMDB."
+            #print(t.notes)
 
         t.imdb_last_update_date = datetime.now()
         db.updateTitle(t)
-        print(f'Searching for movie {t.spi_code} on IMDB takes %.2f seconds.' % (time.time() - movie_search_start_time))
+        print(f'Searching for movie {t.spi_code} on IMDB takes %.2f seconds with status: {str(t.is_imdb_found)} ' % (time.time() - movie_search_start_time))
     print(f'getBasicImdbInfo() total execution time --- %.2f minutes & %s results ---' % ((time.time() - start_time)/60, str(len(titles))))
 
 def getTitlesFromDBRows(dbTitles):
@@ -261,8 +290,7 @@ def getTitlesFromDBRows(dbTitles):
         title.imdb_directors = row[35]
         title.imdb_cast = row[36]
         title.imdb_duration_minutes = int(row[37])
-        title.imdb_last_update_date = nullcontext if row[38] == "" else datetime.strptime(row[38])
-        
+        title.imdb_last_update_date = None if row[38] == "" else datetime.fromisoformat(row[38])
         titles.append(title)
-
+        
     return titles
