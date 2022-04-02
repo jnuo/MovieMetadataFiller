@@ -2,7 +2,7 @@ import time
 import pandas as pd
 import Models.Title as Title
 
-EXCEL_INPUT_FILE = "mypy/docs/filmbox_export_videos_last3days.xlsx"
+EXCEL_INPUT_FILE = "mypy/docs/export_video_version_132_1647797293.xlsx"
 EXCEL_OUTPUT_FILE = "mypy/docs/output.xlsx"
 
 def read_filmbox_movies():
@@ -19,8 +19,8 @@ def write_movies_to_excel(df):
 def read_filmbox_titles():
     start_time = time.time()
     print("excel.read_filmbox_titles() started.")
-
-    df = pd.read_excel(EXCEL_FILE)
+    global EXCEL_INPUT_FILE
+    df = pd.read_excel(EXCEL_INPUT_FILE)
     titles = []
     
     for i in range(len(df)):

@@ -20,11 +20,16 @@ def createCMSExcel():
     start_time = time.time()
     print("createCMSExcel() begins.")
     excelMovies_df = excel.read_filmbox_movies()
-    notes = []
     size = len(excelMovies_df)
+    
+    imdbScoreChanged = []
+    directorsChanged = []
+    castChanged = []
     
     for i in range(size):
         spi_code = ""
+        db_titles = None
+        title = None
         try:
             spi_code = excelMovies_df['SPICode*'][i]
             if(spi_code.strip()==""):
@@ -32,26 +37,57 @@ def createCMSExcel():
             else:
                 spi_code = spi_code.split("_")[0]
                 spi_code = spi_code.split("-")[0]
-        except:
-            note = "SPI Code is empty."
-            continue
-        
-        try:
+            
             db_titles = db.getTitleBySpiCode(spi_code)
             title = getTitlesFromDBRows(db_titles)[0]
+        except:
+            imdbScoreChanged.append(0)
+            directorsChanged.append(0)
+            castChanged.append(0)
+            continue
+        
+        # imdb score comparison
+        try:
             imdb_score = float(excelMovies_df["ImdbScore"][i])
             if title.imdb_imdb_score != None and title.imdb_imdb_score != 0 and title.imdb_imdb_score != imdb_score:
                 excelMovies_df["ImdbScore"][i] = str(title.imdb_imdb_score)
-                notes.append("IMDBScore")
+                imdbScoreChanged.append(1)
             else:
-                notes.append("")
+                imdbScoreChanged.append(0)
         except:
-            notes.append("")
+            imdbScoreChanged.append(0)
             continue
+        
+        # directors comparison
+        try:
+            directors = excelMovies_df["Director"][i]
+            if title.imdb_directors != None and title.imdb_directors != "" and title.imdb_directors != directors:
+                excelMovies_df["Director"][i] = title.imdb_directors
+                directorsChanged.append(1)
+            else:
+                directorsChanged.append(0)
+        except:
+            directorsChanged.append(0)
+            continue
+        
+        # cast comparison
+        try:
+            actors = excelMovies_df["Actor"][i]
+            if title.imdb_cast != None and title.imdb_cast != "" and title.imdb_cast != actors:
+                excelMovies_df["Actor"][i] = title.imdb_cast
+                castChanged.append(1)
+            else:
+                castChanged.append(0)
+        except:
+            castChanged.append(0)
+            continue
+        print(f"createCMSExcel() - compared excel w/ DB. Result: imdbChanged = {imdbScoreChanged[i]}, directorChanged = {directorsChanged[i]}, castChanged = {castChanged[i]}.")
 
-    excelMovies_df["mypy notes"] = notes
+    excelMovies_df["imdbScoreChanged"] = imdbScoreChanged
+    excelMovies_df["directorsChanged"] = directorsChanged
+    excelMovies_df["castChanged"] = castChanged
     excel.write_movies_to_excel(excelMovies_df)
-    print("createCMSExcel() total execution time --- %.2f minutes ---" % (time.time() - start_time))
+    print("createCMSExcel() total execution time --- %.2f seconds ---" % (time.time() - start_time))
 
 # Target 2: getting local title-name & synopsis text from content websites for each title, compare with ours, update if necessary.
 #   1. Local title names

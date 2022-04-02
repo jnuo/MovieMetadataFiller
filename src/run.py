@@ -2,13 +2,18 @@ import request_operations as ro
 import scrapeImdb as si
 import imdbpy as im
 import metadataChecker as meta
-import datetime
 
-#meta.insertSpiTitlesToDB_2()
-#meta.getImdbInfo()
-# 3. when all data is updated - create the new excel with difference data & REPORT CHANGE
+# 1. Create DB, parse excel, store in DB
+meta.insertSpiTitlesToDB_2()
+
+# 2. Search for all movies on IMDB, store in DB
+meta.getImdbInfo()
+
+# 3. Create the new excel with difference data & REPORT CHANGE
 meta.createCMSExcel()
+
 # 4. upload to CMS & be happy about it
+# ok :)
 
 ####
 ## Venv
