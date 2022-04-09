@@ -2,8 +2,8 @@ import time
 import pandas as pd
 import Models.Title as Title
 
-EXCEL_INPUT_FILE = "mypy/docs/export_video_version_132_1647797293.xlsx"
-EXCEL_OUTPUT_FILE = "mypy/docs/output.xlsx"
+EXCEL_INPUT_FILE = "docs/export_video_version_139_1649439549.xlsx"
+EXCEL_OUTPUT_FILE = "docs/output.xlsx"
 
 def read_filmbox_movies():
     global EXCEL_INPUT_FILE

@@ -1,10 +1,8 @@
 import request_operations as ro
-import scrapeImdb as si
-import imdbpy as im
 import metadataChecker as meta
 
 # 1. Create DB, parse excel, store in DB
-meta.insertSpiTitlesToDB_2()
+meta.insertSpiTitlesToDB()
 
 # 2. Search for all movies on IMDB, store in DB
 meta.getImdbInfo()

@@ -44,6 +44,7 @@ def createMovieDBifNotExists():
             , imdb_directors TEXT
             , imdb_cast TEXT
             , imdb_duration_minutes INTEGER
+            , imdb_age_rating TEXT
             , imdb_last_update_date TEXT
             , UNIQUE(spi_code)
         )
@@ -66,6 +67,7 @@ def insertOrIgnoreTitle2(title):
     imdb_cast = imdb_directors = imdb_genre = imdb_url = imdb_id = ""
     imdb_imdb_score = 0
     imdb_duration = 0
+    imdb_age_rating = ""
     imdbLastUpdate = ""
     cursor.execute("""
         INSERT OR IGNORE INTO Title VALUES(
@@ -107,6 +109,7 @@ def insertOrIgnoreTitle2(title):
             , :imdb_directors
             , :imdb_cast
             , :imdb_duration_minutes
+            , :imdb_age_rating
             , :imdb_last_update_date
         )
     """, {
@@ -148,6 +151,7 @@ def insertOrIgnoreTitle2(title):
         , "imdb_directors": imdb_directors
         , "imdb_cast": imdb_cast
         , "imdb_duration_minutes": imdb_duration
+        , "imdb_age_rating": imdb_age_rating
         , "imdb_last_update_date": imdbLastUpdate
         }
     )
@@ -262,6 +266,7 @@ def updateTitle(title):
             , imdb_directors = :imdb_directors
             , imdb_cast = :imdb_cast
             , imdb_duration_minutes = :imdb_duration_minutes
+            , imdb_age_rating = :imdb_age_rating
             , imdb_last_update_date = :imdb_last_update_date
         WHERE
             spi_code = :spi_code
@@ -304,6 +309,7 @@ def updateTitle(title):
         , "imdb_directors": title.imdb_directors
         , "imdb_cast": title.imdb_cast
         , "imdb_duration_minutes": title.imdb_duration_minutes
+        , "imdb_age_rating": title.imdb_age_rating
         , "imdb_last_update_date": title.imdb_last_update_date.isoformat()
         }
     )

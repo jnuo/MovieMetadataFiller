@@ -38,6 +38,7 @@ class Title:
     imdb_directors: str
     imdb_cast: str
     imdb_duration_minutes: int
+    imdb_age_rating: str
     imdb_last_update_date: datetime
 
     notes: str

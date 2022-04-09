@@ -14,3 +14,8 @@ def getMovieURL(movie):
     im = imdb.IMDb()
     url = im.get_imdbURL(movie)
     return url
+
+def getMovieParentsGuide(imdbId):
+    im = imdb.IMDb()
+    sth = im.get_movie_parents_guide(imdbId)
+    return sth
