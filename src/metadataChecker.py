@@ -49,7 +49,7 @@ def getImdbInfo():
     for t in titles:
         if t.imdb_last_update_date == None:
             titles_to_search_on_imdb.append(t)
-        elif (date.today() - t.imdb_last_update_date.date()).days > 1:
+        elif (date.today() - t.imdb_last_update_date.date()).days > 30:
             titles_to_search_on_imdb.append(t)
 
     print(f'getImdbInfo() starts for {str(len(titles_to_search_on_imdb))} titles.')
@@ -129,9 +129,13 @@ def getImdbInfo():
             try:
                 imdbCastArray = imdbMovieDetails['cast']
                 imdbCastStrArray = []
+                index = 0
                 for imdbCastInfo in imdbCastArray:
-                    ic = imdbCastInfo['name']
-                    imdbCastStrArray.append(ic)
+                    if index<5:
+                        ic = imdbCastInfo['name']
+                        imdbCastStrArray.append(ic)
+                        index += 1
+                
                 imdbCast = ', '.join(map(str, imdbCastStrArray))
                 t.imdb_cast = imdbCast
             except:
@@ -171,6 +175,7 @@ def createCMSExcel():
     imdbScoreChanged = []
     directorsChanged = []
     castChanged = []
+    imdbAgeRating = []
     
     for i in range(size):
         spi_code = ""
@@ -190,6 +195,7 @@ def createCMSExcel():
             imdbScoreChanged.append(0)
             directorsChanged.append(0)
             castChanged.append(0)
+            imdbAgeRating.append("")
             continue
         
         # imdb score comparison
@@ -219,19 +225,39 @@ def createCMSExcel():
         # cast comparison
         try:
             actors = excelMovies_df["Actor"][i]
-            if title.imdb_cast != None and title.imdb_cast != "" and title.imdb_cast != actors:
-                excelMovies_df["Actor"][i] = title.imdb_cast
+            actors_arr = actors.split(", ")
+            actors_arr = actors_arr[:5]
+            actors_top5 = ""
+
+            # write only top 5 actors in the excel
+            for ii in range(len(actors_arr)):
+                name = actors_arr[ii]
+                name = name.strip()
+                
+                if ii == len(actors_arr)-1:
+                    str_concat  = name
+                else: 
+                    str_concat  = name + ", "
+                actors_top5 += str_concat
+            
+            if actors_top5 != None and actors_top5 != "" and actors_top5 != actors:
+                excelMovies_df["Actor"][i] = actors_top5
                 castChanged.append(1)
             else:
                 castChanged.append(0)
         except:
             castChanged.append(0)
             continue
+
         print(f"createCMSExcel() - compared excel w/ DB. Result: imdbChanged = {imdbScoreChanged[i]}, directorChanged = {directorsChanged[i]}, castChanged = {castChanged[i]}.")
+
+        imdbAgeRating.append(title.imdb_age_rating)
 
     excelMovies_df["imdbScoreChanged"] = imdbScoreChanged
     excelMovies_df["directorsChanged"] = directorsChanged
     excelMovies_df["castChanged"] = castChanged
+    #excelMovies_df["imdbAgeRating"] = imdbAgeRating
+
     excel.write_movies_to_excel(excelMovies_df)
     print("createCMSExcel() total execution time --- %.2f seconds ---" % (time.time() - start_time))
 
