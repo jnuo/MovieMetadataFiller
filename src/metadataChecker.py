@@ -153,12 +153,10 @@ def getImdbInfo():
             except:
                 t.imdb_age_rating = ""
                 t.notes += "IMDB age rating info not found. "
-
             break
         
         if not(t.is_imdb_found):
             t.notes = "Movie NOT FOUND on IMDB."
-            #print(t.notes)
 
         t.imdb_last_update_date = datetime.now()
         db.updateTitle(t)
@@ -198,6 +196,21 @@ def createCMSExcel():
             imdbAgeRating.append("")
             continue
         
+        # fix image URLs prefix problem
+        if i==1267:
+            print("onur")
+        if str(excelMovies_df["Poster Image(320x480)"][i]) != 'nan':
+            excelMovies_df["Poster Image(320x480)"][i] = "https://filmboxassets.tv2zcdn.com/images/" + excelMovies_df["Poster Image(320x480)"][i]
+        if str(excelMovies_df["Banner Image(1280x720)"][i]) != 'nan':
+            excelMovies_df["Banner Image(1280x720)"][i] = "https://filmboxassets.tv2zcdn.com/images/" + excelMovies_df["Banner Image(1280x720)"][i]
+        
+        if not(title.is_imdb_found):
+            imdbScoreChanged.append(0)
+            directorsChanged.append(0)
+            castChanged.append(0)
+            imdbAgeRating.append("")
+            continue
+        
         # imdb score comparison
         try:
             imdb_score = float(excelMovies_df["ImdbScore"][i])
@@ -224,23 +237,23 @@ def createCMSExcel():
         
         # cast comparison
         try:
-            actors = excelMovies_df["Actor"][i]
+            topN = 5
+            actors = title.imdb_cast
             actors_arr = actors.split(", ")
-            actors_arr = actors_arr[:5]
-            actors_top5 = ""
+            actors_arr = actors_arr[:topN]
+            
+            actors_top5 = actors_arr[0].strip()
+            index = 1
 
             # write only top 5 actors in the excel
-            for ii in range(len(actors_arr)):
-                name = actors_arr[ii]
+            while index<topN:
+                name = actors_arr[index]
                 name = name.strip()
-                
-                if ii == len(actors_arr)-1:
-                    str_concat  = name
-                else: 
-                    str_concat  = name + ", "
+                str_concat  = ", " + name
                 actors_top5 += str_concat
+                index += 1
             
-            if actors_top5 != None and actors_top5 != "" and actors_top5 != actors:
+            if actors_top5 != None and actors_top5 != "" and actors_top5 != excelMovies_df["Actor"][i]:
                 excelMovies_df["Actor"][i] = actors_top5
                 castChanged.append(1)
             else:
@@ -248,15 +261,14 @@ def createCMSExcel():
         except:
             castChanged.append(0)
             continue
-
-        print(f"createCMSExcel() - compared excel w/ DB. Result: imdbChanged = {imdbScoreChanged[i]}, directorChanged = {directorsChanged[i]}, castChanged = {castChanged[i]}.")
-
+        
         imdbAgeRating.append(title.imdb_age_rating)
-
+        print(f"createCMSExcel() - compared excel w/ DB for {title.spi_code}. Result: imdbChanged = {imdbScoreChanged[i]}, directorChanged = {directorsChanged[i]}, castChanged = {castChanged[i]}.")
+    
     excelMovies_df["imdbScoreChanged"] = imdbScoreChanged
     excelMovies_df["directorsChanged"] = directorsChanged
     excelMovies_df["castChanged"] = castChanged
-    #excelMovies_df["imdbAgeRating"] = imdbAgeRating
+    # excelMovies_df["imdbAgeRating"] = imdbAgeRating
 
     excel.write_movies_to_excel(excelMovies_df)
     print("createCMSExcel() total execution time --- %.2f seconds ---" % (time.time() - start_time))

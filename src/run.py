@@ -2,10 +2,10 @@ import request_operations as ro
 import metadataChecker as meta
 
 # 1. Create DB, parse excel, store in DB
-meta.insertSpiTitlesToDB()
+#meta.insertSpiTitlesToDB()
 
 # 2. Search for all movies on IMDB, store in DB
-meta.getImdbInfo()
+#meta.getImdbInfo()
 
 # 3. Create the new excel with difference data & REPORT CHANGE
 meta.createCMSExcel()
