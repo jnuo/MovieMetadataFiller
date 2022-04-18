@@ -4,4 +4,4 @@
 .DS_Store
 src/__pycache__
 docs/
-src/Models/__pycache__
+src/Models/__pycache__/Title.cpython-39.pyc
