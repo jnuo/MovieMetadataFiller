@@ -48,9 +48,11 @@ def readDavitsFile():
             print('No data found.')
             return
 
-        print('Name, Major:')
-        for row in values:
-            # Print columns A and E, which correspond to indices 0 and 4.
-            print('%s, %s, %s' % (row[0], row[3], row[10]))
+        #print('Name, Major:')
+        #for row in values:
+        #    # Print columns A and E, which correspond to indices 0 and 4.
+        #    print('%s, %s, %s' % (row[0], row[3], row[10]))
+        return values
     except HttpError as err:
         print(err)
+        return

@@ -9,8 +9,10 @@ def checkForChangedTranslation():
     print(f'checkForChangedTranslation begins')
     start_time = time.time()
 
-    translations = excel.read_translations()
-    print(f'checkForChangedTranslation file size: {len(translations)}.')
+    cms_translations = excel.read_translations()
+    print(f'cms_translations file size: {len(cms_translations)}.')
+
+    cloud_translations = gs.readDavitsFile()
+    print(f'cloud_translations file size: {len(cloud_translations)}.')
     
-    gs.readDavitsFile()
-    print(f"insertSpiTitlesToDB_2 Total Time: %.2f seconds" % (time.time() - start_time))
+    print(f"checkForChangedTranslation Total Time: %.2f seconds" % (time.time() - start_time))
