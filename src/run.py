@@ -1,6 +1,11 @@
 import request_operations as ro
 import metadataChecker as meta
+import translationChecker as tc
 
+# translation thing
+tc.checkForChangedTranslation()
+
+#metadata thing
 # 1. Create DB, parse excel, store in DB
 #meta.insertSpiTitlesToDB()
 
@@ -8,7 +13,7 @@ import metadataChecker as meta
 #meta.getImdbInfo()
 
 # 3. Create the new excel with difference data & REPORT CHANGE
-meta.createCMSExcel()
+#meta.createCMSExcel()
 
 # 4. upload to CMS & be happy about it
 # ok :)
@@ -29,6 +34,7 @@ meta.createCMSExcel()
 # git add 'filename'
 # git commit 'filename'
 # git push
+# git pull
 
 ##
 # to get original file and overwrite local changes

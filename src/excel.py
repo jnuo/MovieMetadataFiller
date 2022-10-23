@@ -2,8 +2,17 @@ import time
 import pandas as pd
 import Models.Title as Title
 
-EXCEL_INPUT_FILE = "docs/export_video_version_138_1649234405.xlsx"
-EXCEL_OUTPUT_FILE = "docs/output.xlsx"
+#EXCEL_INPUT_FILE = "docs/export_video_version_138_1649234405.xlsx"
+EXCEL_INPUT_FILE = "docs/Missing-Meta.xlsx"
+EXCEL_OUTPUT_FILE = "docs/output-Missing-Meta.xlsx"
+
+TRANSLATION_INPUT_FILE = "docs/translationChecker/input1.xlsx"
+TRANSLATION_OUTPUT_FILE = "docs/translationChecker/output.xlsx"
+
+def read_translations():
+    global TRANSLATION_INPUT_FILE
+    df = pd.read_excel(TRANSLATION_INPUT_FILE)
+    return df
 
 def read_filmbox_movies():
     global EXCEL_INPUT_FILE
@@ -59,7 +68,7 @@ def read_filmbox_titles():
         t.spi_slug = df['Content Slug'][i]
         t.spi_description = df['Description*'][i]
         t.spi_editorial_note = df['EditorialNote'][i]
-        t.spi_fb_regions = df['Region*'][i]
+        t.spi_fb_regions = df['Regions*'][i]
         t.spi_age = df['Age*'][i]
         t.spi_series_title = df['SeriesTitle'][i]
         t.spi_series_original_title = df['SeriesEnglishTitle'][i]

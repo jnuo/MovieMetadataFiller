@@ -5,3 +5,5 @@
 src/__pycache__
 docs/
 src/Models/__pycache__/Title.cpython-39.pyc
+token.json
+*.sqbpro
