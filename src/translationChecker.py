@@ -11,5 +11,6 @@ def checkForChangedTranslation():
 
     translations = excel.read_translations()
     print(f'checkForChangedTranslation file size: {len(translations)}.')
+    
     gs.readDavitsFile()
     print(f"insertSpiTitlesToDB_2 Total Time: %.2f seconds" % (time.time() - start_time))
