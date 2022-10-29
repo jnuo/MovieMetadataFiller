@@ -8,6 +8,7 @@ EXCEL_OUTPUT_FILE = "docs/output-Missing-Meta.xlsx"
 
 TRANSLATION_INPUT_FILE = "docs/translationChecker/input1.xlsx"
 TRANSLATION_OUTPUT_FILE = "docs/translationChecker/output.xlsx"
+TRANSLATION_OUTPUT_FILE_SHEET = "Worksheet"
 
 def read_translations():
     global TRANSLATION_INPUT_FILE
@@ -19,6 +20,15 @@ def read_filmbox_movies():
     df = pd.read_excel(EXCEL_INPUT_FILE)
     #df = pd.read_excel('docs/filmbox_export_videos_last3days.xlsx')
     return df
+
+def write_translations_to_excel(df):
+    global TRANSLATION_OUTPUT_FILE
+    #with pd.ExcelWriter(TRANSLATION_OUTPUT_FILE, engine="openpyxl") as writer:
+        #df.to_excel(writer)
+        #df.to_excel(writer, index=False)
+        #df.to_excel(writer, sheet_name = TRANSLATION_OUTPUT_FILE_SHEET, index=False)
+        #writer.save()
+    df.to_excel(TRANSLATION_OUTPUT_FILE, index=False)
 
 def write_movies_to_excel(df):
     global EXCEL_OUTPUT_FILE

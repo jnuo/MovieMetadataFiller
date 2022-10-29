@@ -1,9 +1,44 @@
 import request_operations as ro
 import metadataChecker as meta
 import translationChecker as tc
+import excel
+import pandas as pd
 
 # translation thing
 tc.checkForChangedTranslation()
+
+### pandas sample codes begin
+#column = ["mariya", "batman", "sponge bob"]
+#titled_columns = {
+#    "name": column,
+#    "height": [1.67, 1.9, 0.25],
+#    "weight": [54, 100, 0.8]
+#}
+
+#select values from dataframe
+#data = pd.DataFrame(titled_columns)
+#excel.write_translations_to_excel(data)
+
+#select_column = data["weight"][1]
+#select_row = data.iloc[1]["height"]
+
+#manipulate dataframe values
+#bmi = []
+#for i in range(len(data)):
+#    bmi_score = data["weight"][i] / (data["height"][i]**2)
+#    bmi.append(bmi_score)
+
+#data["bmi"] = bmi
+#print(data)
+
+#mariyas_row = data[ data["name"] == "mariya" ]
+#mariyas_weight = mariyas_row[0]["weight"]
+#print(mariyas_weight)
+
+# save dataframe to a file
+#data.to_csv("bmi.txt", sep="\t")
+### pandas sample codes end
+
 
 #metadata thing
 # 1. Create DB, parse excel, store in DB
