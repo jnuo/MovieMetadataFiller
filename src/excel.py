@@ -1,18 +1,22 @@
 import time
 import pandas as pd
 import Models.Title as Title
+from datetime import datetime
 
 #EXCEL_INPUT_FILE = "docs/export_video_version_138_1649234405.xlsx"
 EXCEL_INPUT_FILE = "docs/Missing-Meta.xlsx"
 EXCEL_OUTPUT_FILE = "docs/output-Missing-Meta.xlsx"
 
-TRANSLATION_INPUT_FILE =  "docs/translationChecker/export_translation_version_1668111847.xlsx"
-TRANSLATION_OUTPUT_FILE = "docs/translationChecker/translation_output.xlsx"
-NEW_KEYS_OUTPUT_FILE = "docs/translationChecker/new_keys_on_CMS_output.xlsx"
+TRANSLATION_FILE_PATH = "docs/translationChecker/"
+TRANSLATION_INPUT_FILE =  "export_translation_version_1668111847.xlsx"
+TRANSLATION_OUTPUT_FILE = "output_translation"
+NEW_KEYS_OUTPUT_FILE = "output_new_keys_on_CMS"
 
 def read_translations():
+    global TRANSLATION_FILE_PATH
     global TRANSLATION_INPUT_FILE
-    df = pd.read_excel(TRANSLATION_INPUT_FILE)
+    file_name_path = TRANSLATION_FILE_PATH + TRANSLATION_INPUT_FILE
+    df = pd.read_excel(file_name_path)
     return df
 
 def read_filmbox_movies():
@@ -22,12 +26,20 @@ def read_filmbox_movies():
     return df
 
 def write_translations_to_excel(df):
+    global TRANSLATION_FILE_PATH
     global TRANSLATION_OUTPUT_FILE
-    df.to_excel(TRANSLATION_OUTPUT_FILE, index=False)
+    now = datetime.now() # current date and time
+    date_time = now.strftime("_%Y-%m-%d-%H-%M-%S")
+    file_name_path = TRANSLATION_FILE_PATH + TRANSLATION_OUTPUT_FILE + date_time + ".xlsx"
+    df.to_excel(file_name_path, index=False)
 
 def write_new_keys_from_cms_to_excel(df):
+    global TRANSLATION_FILE_PATH
     global NEW_KEYS_OUTPUT_FILE
-    df.to_excel(NEW_KEYS_OUTPUT_FILE, index=False)
+    now = datetime.now() # current date and time
+    date_time = now.strftime("_%Y-%m-%d-%H-%M-%S")
+    file_name_path = TRANSLATION_FILE_PATH + NEW_KEYS_OUTPUT_FILE + date_time + ".xlsx"
+    df.to_excel(file_name_path, index=False)
 
 def write_movies_to_excel(df):
     global EXCEL_OUTPUT_FILE
