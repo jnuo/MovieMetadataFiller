@@ -161,3 +161,39 @@ def checkForChangedTranslation():
     data = pd.DataFrame(dfResult)
     excel.write_translations_to_excel(data)
     print(f"checkForChangedTranslation Total Time: %.2f seconds" % (time.time() - start_time))
+
+
+def checkForNewKeys():
+    print(f'checkForNewKeys begins')
+    start_time = time.time()
+
+    cms_translations = excel.read_translations() # type: pandas dataframe
+    print(f'cms_translations file size: {len(cms_translations)}.')
+
+    cloud_translations = gs.readDavitsFile() #type: list
+    print(f'cloud_translations file size: {len(cloud_translations)}.')
+
+    dfResult = {
+        "new_key": [],
+        "English": []
+    }
+     
+    for i in range(len(cms_translations)):
+        # key
+        cms_key = cms_translations["key"][i]
+        cms_en = cms_translations["English"][i]
+        
+        # search for the key on the cloud file
+        isFound = False
+        for ct in cloud_translations:
+            if ct[0] == cms_key:
+                isFound = True
+                break
+        if(not(isFound)):
+            dfResult["new_key"].append(cms_key)
+            dfResult["English"].append(cms_en)
+        print(f"checkForNewKeys complete for key: " + cms_key)
+    data = pd.DataFrame(dfResult)
+    #print(data["new_key"])
+    excel.write_new_keys_from_cms_to_excel(data)
+    print(f"checkForNewKeys Total Time: %.2f seconds" % (time.time() - start_time))

@@ -6,8 +6,9 @@ import Models.Title as Title
 EXCEL_INPUT_FILE = "docs/Missing-Meta.xlsx"
 EXCEL_OUTPUT_FILE = "docs/output-Missing-Meta.xlsx"
 
-TRANSLATION_INPUT_FILE =  "docs/translationChecker/export_translation_version_1667085575.xlsx"
-TRANSLATION_OUTPUT_FILE = "docs/translationChecker/output.xlsx"
+TRANSLATION_INPUT_FILE =  "docs/translationChecker/export_translation_version_1668111847.xlsx"
+TRANSLATION_OUTPUT_FILE = "docs/translationChecker/translation_output.xlsx"
+NEW_KEYS_OUTPUT_FILE = "docs/translationChecker/new_keys_on_CMS_output.xlsx"
 
 def read_translations():
     global TRANSLATION_INPUT_FILE
@@ -23,6 +24,10 @@ def read_filmbox_movies():
 def write_translations_to_excel(df):
     global TRANSLATION_OUTPUT_FILE
     df.to_excel(TRANSLATION_OUTPUT_FILE, index=False)
+
+def write_new_keys_from_cms_to_excel(df):
+    global NEW_KEYS_OUTPUT_FILE
+    df.to_excel(NEW_KEYS_OUTPUT_FILE, index=False)
 
 def write_movies_to_excel(df):
     global EXCEL_OUTPUT_FILE

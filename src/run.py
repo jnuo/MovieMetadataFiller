@@ -6,6 +6,7 @@ import pandas as pd
 
 # translation thing
 tc.checkForChangedTranslation()
+tc.checkForNewKeys()
 
 ### pandas sample codes begin
 #column = ["mariya", "batman", "sponge bob"]
